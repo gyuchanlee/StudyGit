@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findAllByUserId(String userId);
 
-    Iterable<Member> findAllByUserIdOrderByHeightHeightDesc(String userId);
+    Iterable<Member> findAllByUserIdOrderByHeightDesc(String userId);
 
     boolean existsById(Long id);
 
@@ -28,6 +28,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      * 파라미터 지정 : 이름을 지정하는 네임드 파라미터 방식 지향. @Param을 활용 (위치 기반은 시간에 따라 코드가 바뀔 위험이 존재함)
      *
      */
-    @Query(value = "select m from Member m where m.id =:id")
+    @Query(value = "select m from MEMBER m where m.id =:id")
     List<Member> findByIdCustom(@Param("id") Long id);
 }
