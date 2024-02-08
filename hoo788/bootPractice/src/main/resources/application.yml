@@ -16,3 +16,10 @@ spring:
   h2:
     console:
       enabled: true
+
+# actuator : 웹에 모든 엔드포인트 노출.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
