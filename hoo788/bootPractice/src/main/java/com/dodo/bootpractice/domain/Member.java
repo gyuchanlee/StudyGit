@@ -32,6 +32,7 @@ public class Member {
         this.height = height;
     }
 
+
     public void updateMember(String name, String password, String tel, int rating, double height) {
         this.name = name;
         this.password = password;
