@@ -3,9 +3,10 @@ spring:
     cache: false
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate.format_sql: true
+    defer-datasource-initialization: true
 
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
@@ -16,6 +17,12 @@ spring:
   h2:
     console:
       enabled: true
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      mode: always
+
 
 # actuator : 웹에 모든 엔드포인트 노출.
 management:

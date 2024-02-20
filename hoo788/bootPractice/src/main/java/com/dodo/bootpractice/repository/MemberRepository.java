@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findAllByUserId(String userId);
+    Optional<Member> findByUserId(String userId);
 
     Iterable<Member> findAllByUserIdOrderByHeightDesc(String userId);
 
