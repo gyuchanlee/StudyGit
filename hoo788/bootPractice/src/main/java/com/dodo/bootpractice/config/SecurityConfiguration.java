@@ -5,6 +5,7 @@ import com.dodo.bootpractice.security.CustomAccessDeniedHandler;
 import com.dodo.bootpractice.security.CustomUserDetailsService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +27,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
@@ -45,35 +51,43 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable())
+                // HTTPS를 강제하도록 변경
+//                .requiresChannel(channelRequestMatcherRegistry ->
+//                        channelRequestMatcherRegistry.anyRequest().requiresSecure())
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/login") // GET
+                        .loginProcessingUrl("/login") // POST
+                        .successForwardUrl("/login_success") // POST
+//                        .failureForwardUrl("/login_failure") // POST
                         .permitAll()
                 )
-                // 세션 관리
+                // 세션 관리 기능
                 .sessionManagement((sessionManagement) ->
                         sessionManagement
+                                // 세션 동시성 관련 기능
                                 .sessionConcurrency((sessionConcurrency) ->
                                         sessionConcurrency
+                                                //  최대 허용 가능 세션 수를 정할 수 있다. 만약 -1을 넣는다면 무제한 로그인 세션을 허용한다는 의미
                                                 .maximumSessions(1)
+                                                // 최초 로그인 후, 로그아웃 하고 다시 로그인이 안되는 현상 원인
+                                                // 기본값은 false(기존 세션 만료), true : 사용자의 인증이 실패한다(동시 로그인 차단)
+                                                .maxSessionsPreventsLogin(true)
                                                 .expiredUrl("/login?expired")
+                                                .sessionRegistry(sessionRegistry())
                                 )
                 )
                 // LogoutConfigurer
                 .logout(logoutConfigurer -> {
                     logoutConfigurer.logoutSuccessUrl("/");
-                    logoutConfigurer.addLogoutHandler((request, response, authentication) -> {
-                                // LogoutFilter가 내부적으로 세션 무효화를 해줌.
-                                HttpSession session = request.getSession();
-                                if (session != null) {
-                                    session.invalidate();
-                                }
-                    });
+                    logoutConfigurer.invalidateHttpSession(true); // 세션 무효화 설정
+                    logoutConfigurer.deleteCookies("JSESSIONID");
                 })
                 .authorizeHttpRequests((authz) -> authz
                         // delete method의 /member url에 어드민 권한만 접근하도록 제한
                         .requestMatchers(HttpMethod.DELETE, "/member").hasRole("ADMIN")
+                        .requestMatchers("/resources/static/**", "/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
@@ -84,9 +98,22 @@ public class SecurityConfiguration {
     }
 
     // 이그노어링 : 시큐리티6 설정.
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/resources/static/**");
+//    }
+
+
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/resources/static/**");
+    public SessionRegistry sessionRegistry() {
+        SessionRegistry sessionRegistry = new SessionRegistryImpl();
+        return sessionRegistry;
+    }
+
+    // Register HttpSessionEventPublisher
+    @Bean
+    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
     }
 
 

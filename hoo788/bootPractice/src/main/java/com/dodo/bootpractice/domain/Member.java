@@ -28,11 +28,9 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String password;
     private String tel;
-    @Max(value = 5, message = "member rating must be under 5 rating")
-    @Min(value = 1, message = "member rating must be over 1 rating")
     private int rating;
     private double height;
-    private String role = "USER";
+    private String role = "ROLE_USER";
 
     // 권한 반환 (나중에 좀 더 알아보기!!)
     @Override
@@ -72,6 +70,7 @@ public class Member implements UserDetails {
         return true;
     }
 
+    @Builder
     public Member(String userId, String name, String password, String tel, int rating, double height) {
         this.userId = userId;
         this.name = name;

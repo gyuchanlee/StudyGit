@@ -30,3 +30,17 @@ management:
     web:
       exposure:
         include: "*"
+
+#server:
+#  ssl:
+#    key-store-type: PKCS12 # 타입 지정
+#    key-store: classpath:keystore/sbip.p12 # 인증서 포함한 파일 위치
+#    key-store-password: p@ssw0rd # 비밀번호
+#    key-alias: sbip # 매핑할 별명
+#  port: 8443 # HTTPS 포트 설정
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

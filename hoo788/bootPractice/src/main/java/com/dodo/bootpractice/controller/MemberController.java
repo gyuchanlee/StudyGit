@@ -1,5 +1,6 @@
 package com.dodo.bootpractice.controller;
 
+import com.dodo.bootpractice.controller.dto.MemberDto;
 import com.dodo.bootpractice.domain.Member;
 import com.dodo.bootpractice.repository.MemberRepository;
 import com.dodo.bootpractice.service.MemberService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -34,11 +36,16 @@ public class MemberController {
         return "/views/member/members";
     }
 
+    // 회원 등록 페이지
+    @GetMapping("/join")
+    public String memberJoinPage(Model model) {
+        return "/views/member/memberJoinForm";
+    }
+
     // 회원 등록
     @PostMapping("")
-    public String memberJoin(@ModelAttribute Member member, Model model) {
-        // 나중에 DTO로 controller -> service단 옮기기.
-        memberService.joinMember(member);
+    public String memberJoin(@ModelAttribute @Validated MemberDto memberDto) {
+        memberService.joinMember(memberDto);
         return "redirect:/";
     }
 

@@ -1,5 +1,6 @@
 package com.dodo.bootpractice.service;
 
+import com.dodo.bootpractice.controller.dto.MemberDto;
 import com.dodo.bootpractice.domain.Member;
 import com.dodo.bootpractice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member findMember(Long id) {
@@ -30,7 +32,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void joinMember(Member member) {
+    public void joinMember(MemberDto memberDto) {
+        Member member = Member.builder()
+            .userId(memberDto.getUserId())
+            .name(memberDto.getName())
+            .password(passwordEncoder.encode(memberDto.getPassword())) // Bcrypt로 인코딩해서 넣기.
+            .tel(memberDto.getTel())
+            .rating(memberDto.getRating())
+            .height(memberDto.getHeight())
+            .build();
+
+
         memberRepository.save(member);
     }
 
@@ -38,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateMember(Long id, Member member) {
         Member findMember = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("MemberService.updateMember(id, member) Error"));
-        findMember.updateMember(findMember.getName(), findMember.getPassword(), findMember.getTel(), findMember.getRating(), findMember.getHeight());
+//        findMember.updateMember(findMember.getName(), findMember.getPassword(), findMember.getTel(), findMember.getRating(), findMember.getHeight());
         // dirty checking
     }
 
