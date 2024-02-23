@@ -44,3 +44,13 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+# catalina.session.StandardManager :  Exception loading sessions from persistent storage 에러 해결
+# 웹어플리케이션의 세션과 톰캣의 세션이 기대하는 세션과 달라서 발생. Tomcat의 SESSIONS.ser 파일이 손상되었거나 예상하지 못한 데이터로 채워졌을 때 이 오류가 발생
+# Tomcat의 세션 지속성을 끄면, 애플리케이션 재시작 또는 서버 재시작시에 세션 상태가 유지되지 않음
+server:
+  servlet:
+    session:
+      persistent: false
+
+

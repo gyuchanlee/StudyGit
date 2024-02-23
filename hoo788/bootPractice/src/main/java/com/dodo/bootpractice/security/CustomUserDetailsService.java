@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .disabled(!findMember.isEnabled()) // 사용자에 의해 확정되지 않았다면 비활성으로 분류
                 .accountExpired(!findMember.isAccountNonExpired()) // 만료 여부
                 .accountLocked(!findMember.isAccountNonLocked()) // 잠금 여부
-                .roles("USER")
+                .roles(findMember.getRole())
                 .build();
     }
 }

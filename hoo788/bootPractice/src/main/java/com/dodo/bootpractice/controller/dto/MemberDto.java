@@ -19,6 +19,7 @@ public class MemberDto {
     private String name;
     @NotEmpty
     private String password;
+    private String email;
     private String tel;
     @Max(value = 5, message = "member rating must be under 5 rating")
     @Min(value = 0, message = "member rating must be over 0 rating")
@@ -28,11 +29,12 @@ public class MemberDto {
     private double height;
     private String role;
 
-    public MemberDto(String userId, String name, String password, String tel, int rating, double height) {
+    public MemberDto(String userId, String name, String password, String tel, String email, int rating, double height) {
         this.userId = userId;
         this.name = name;
         this.password = password;
         this.tel = tel;
+        this.email = email;
         this.rating = rating;
         this.height = height;
     }

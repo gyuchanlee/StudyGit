@@ -13,7 +13,7 @@ public interface MemberService {
     // 회원 등록
     void joinMember(MemberDto memberDto);
     // 회원 수정
-    void updateMember(Long id, Member member);
+    void updateMember(Long id, MemberDto memberDto);
     // 회원 삭제
     void deleteMember(Long id);
 }

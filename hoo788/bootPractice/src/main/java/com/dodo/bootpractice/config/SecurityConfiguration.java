@@ -87,8 +87,12 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authz) -> authz
                         // delete method의 /member url에 어드민 권한만 접근하도록 제한
                         .requestMatchers(HttpMethod.DELETE, "/member").hasRole("ADMIN")
-                        .requestMatchers("/resources/static/**", "/").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/user2").hasAnyRole("USER2", "ADMIN")
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/resources/static/**", "/", "/member/join", "/member/paging", "/member/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/member").permitAll()
+//                        .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
                 // exceptionHandling(()-> ...) : 예외 처리 핸들링.
@@ -118,9 +122,9 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+        public PasswordEncoder passwordEncoder() {
 
-        return new BCryptPasswordEncoder();
+            return new BCryptPasswordEncoder();
     }
 
 

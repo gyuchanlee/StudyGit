@@ -27,6 +27,7 @@ public class Member implements UserDetails {
     private String name;
     @Column(nullable = false)
     private String password;
+    private String email;
     private String tel;
     private int rating;
     private double height;
@@ -81,9 +82,10 @@ public class Member implements UserDetails {
     }
 
 
-    public void updateMember(String name, String password, String tel, int rating, double height) {
+    public void updateMember(String name, String password, String email, String tel, int rating, double height) {
         this.name = name;
         this.password = password;
+        this.email = email;
         this.tel = tel;
         this.rating = rating;
         this.height = height;
