@@ -8,7 +8,9 @@ import com.dodo.bootpractice.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +77,9 @@ public class MemberController {
     // 페이지 연습용
     @GetMapping("/paging")
     @ResponseBody
-    public Page<Member> memberPaging(Pageable pageable) {
+    public Page<Member> memberPaging() {
+        // 조회할 페이지 수, 페이지당 데이터 개수, 정렬 방식
+        Pageable pageable = PageRequest.of(0,1, Sort.by("id").descending());
         Page<Member> all = memberRepository.findAll(pageable);
         return all;
     }

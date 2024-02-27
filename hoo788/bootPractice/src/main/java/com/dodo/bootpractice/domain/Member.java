@@ -33,7 +33,11 @@ public class Member implements UserDetails {
     private double height;
     private String role = "ROLE_USER";
 
-    // 권한 반환 (나중에 좀 더 알아보기!!)
+    /*
+        todo 2024-02-27
+        권한 반환 (나중에 좀 더 알아보기)
+     */
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();

@@ -43,7 +43,6 @@ public class SecurityConfiguration {
 
     // JDBC 인증을 위한 변경
 //    private final DataSource dataSource;
-
     // 커스텀 userDetailsService 설정
     private final MemberRepository memberRepository;
 
@@ -51,6 +50,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+
                 // HTTPS를 강제하도록 변경
 //                .requiresChannel(channelRequestMatcherRegistry ->
 //                        channelRequestMatcherRegistry.anyRequest().requiresSecure())
@@ -92,6 +92,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/resources/static/**", "/", "/member/join", "/member/paging", "/member/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/member").permitAll()
+                                .anyRequest().permitAll()
 //                        .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
