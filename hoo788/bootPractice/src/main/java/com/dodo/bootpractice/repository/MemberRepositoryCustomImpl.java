@@ -34,4 +34,13 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 .where(member.height.goe(150))
                 .fetchOne();
     }
+
+    @Override
+    public List<Member> getMemberList() {
+        return queryFactory
+                .select(member)
+                .from(member)
+                .where(member.userId.eq("hoo788").and(member.name.like("%leegyuchan%")))
+                .fetch();
+    }
 }

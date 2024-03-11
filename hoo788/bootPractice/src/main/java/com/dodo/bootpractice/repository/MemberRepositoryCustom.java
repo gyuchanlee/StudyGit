@@ -9,4 +9,6 @@ public interface MemberRepositoryCustom {
     List<Member> getMembers();
 
     Member getMemberById(Long id);
+
+    List<Member> getMemberList();
 }

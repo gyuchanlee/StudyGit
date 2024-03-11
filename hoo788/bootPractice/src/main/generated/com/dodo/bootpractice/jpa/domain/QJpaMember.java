@@ -22,21 +22,15 @@ public class QJpaMember extends EntityPathBase<JpaMember> {
 
     public static final QJpaMember jpaMember = new QJpaMember("jpaMember");
 
-    public final NumberPath<Integer> age = createNumber("age", Integer.class);
-
-    public final DateTimePath<java.time.LocalDateTime> createdDate = createDateTime("createdDate", java.time.LocalDateTime.class);
-
-    public final StringPath description = createString("description");
+    public final com.dodo.bootpractice.jpa.domain.embedded.QAddress address;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = createDateTime("lastModifiedDate", java.time.LocalDateTime.class);
-
-    public final EnumPath<RoleType> roleType = createEnum("roleType", RoleType.class);
 
     public final QJpaTeam team;
 
     public final StringPath username = createString("username");
+
+    public final com.dodo.bootpractice.jpa.domain.embedded.QPeriod workPeriod;
 
     public QJpaMember(String variable) {
         this(JpaMember.class, forVariable(variable), INITS);
@@ -56,7 +50,9 @@ public class QJpaMember extends EntityPathBase<JpaMember> {
 
     public QJpaMember(Class<? extends JpaMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.address = inits.isInitialized("address") ? new com.dodo.bootpractice.jpa.domain.embedded.QAddress(forProperty("address")) : null;
         this.team = inits.isInitialized("team") ? new QJpaTeam(forProperty("team")) : null;
+        this.workPeriod = inits.isInitialized("workPeriod") ? new com.dodo.bootpractice.jpa.domain.embedded.QPeriod(forProperty("workPeriod")) : null;
     }
 
 }

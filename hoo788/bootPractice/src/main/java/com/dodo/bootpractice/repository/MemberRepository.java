@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     Optional<Member> findByUserId(String userId);
 
@@ -30,4 +30,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      */
     @Query(value = "select m from MEMBER m where m.id =:id")
     List<Member> findByIdCustom(@Param("id") Long id);
+
+
 }

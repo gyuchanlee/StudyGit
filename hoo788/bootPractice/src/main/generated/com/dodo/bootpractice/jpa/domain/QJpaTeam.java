@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,6 +21,8 @@ public class QJpaTeam extends EntityPathBase<JpaTeam> {
     public static final QJpaTeam jpaTeam = new QJpaTeam("jpaTeam");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final ListPath<JpaMember, QJpaMember> members = this.<JpaMember, QJpaMember>createList("members", JpaMember.class, QJpaMember.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
 
